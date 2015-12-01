@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>3D_Y轴旋转</title>
+<meta charset="utf-8">
+<style type="text/css">
+* {
+    margin: 0;
+    padding: 0;
+}
+.warp {
+    width: 250px;
+    height: 150px;
+    margin: 50px;
+    padding: 50px;
+    border: 1px solid #000;
+    -webkit-perspective: 800px;
+            perspective: 800px;
+}
+
+.warp2 {
+    -webkit-perspective: 1px;  /* 数值越小离得越近 */
+            perspective: 1px;
+}
+.box {
+    border: 1px solid red;
+    background-color: yellow;
+    padding:50px;
+    -webkit-transform: rotateY(45deg);
+}
+</style>
+</head>
+<body>
+<div class="warp">
+    <div class="box">我是rotateY 45deg</div>
+</div>
+
+<!-- 
+<div class="warp warp2">
+    <div class="box">我是rotateY 45deg</div>
+</div> 
+-->
+</body>
+</html>
