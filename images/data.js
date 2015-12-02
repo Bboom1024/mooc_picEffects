@@ -1,4 +1,8 @@
 var data = [{
+    img: '0.jpg',
+    caption: '图片0的title',
+    desc: '图片0的详细情况，这里是图片0'
+},{
     img: '1.jpg',
     caption: '图片1的title',
     desc: '图片1的详细情况，这里是图片1'
@@ -58,8 +62,5 @@ var data = [{
     img: '15.jpg',
     caption: '图片15的title',
     desc: '图片15的详细情况，这里是图片15'
-},{
-    img: '16.jpg',
-    caption: '图片16的title',
-    desc: '图片16的详细情况，这里是图片16'
-}];
+}
+];

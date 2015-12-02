@@ -20,16 +20,20 @@ function random(range) {
 function addPhotos() {
     var warpObj = g('#warp');
     var template = warpObj.innerHTML;
-    var html = [];
+    var html = [];  // 制作图片
+    var nav = [];   // 制作导航
     for ( i in data ) {
         var _html = template.replace('{{id}}',      i)
                             .replace('{{img}}',     data[i].img)
                             .replace('{{caption}}', data[i].caption)
                             .replace('{{desc}}',    data[i].desc);
         html.push(_html);
+        nav.push('<span id="nav_'+i+'" class="i" onclick="turn( g(\'#photo_'+i+'\') )"></span>')
     }
+    html.push('<div class="nav">' + nav.join('') + '</div>');
     warpObj.innerHTML = html.join('');
-    rsort(random([0, data.length]));
+    
+    rsort(random([0, data.length-1]));
 }
 addPhotos();
 
@@ -40,10 +44,19 @@ function rsort(n) {
 
     // 这里不能使用for(var i in _photos)因为_photos里面还有一些属性如.length等
     for ( var i=0; i<_photos.length; i++) {
+        /* 清除掉一些样式(特别是上一次居中图片的样式) */
         _photos[i].className = _photos[i].className.replace(/\s*photo-center\s*/, ' ');
+        _photos[i].className = _photos[i].className.replace(/\s*photo-front\s*/, ' ');
+        _photos[i].className = _photos[i].className.replace(/\s*photo-back\s*/, ' ');
+        _photos[i].className += ' photo-front ';
+        _photos[i].style.left = '';
+        _photos[i].style.top = '';
+        _photos[i].style['transform'] = 'rotate(360deg)  scale(1.2)';
+
         photos.push(_photos[i]);
     }
-    g('#photo_'+n).className += ' photo-center';
+    g('#photo_'+n).className += ' photo-center ';
+
     photo_center = photos.splice(n ,1)[0]; // splice()返回被截掉的元素(是一个数组)
     
     // 把海报分成左右两个部分
@@ -54,25 +67,42 @@ function rsort(n) {
     for ( var i in photo_left ) {
         photo_left[i].style.left = random(ranges.left.x) + 'px';
         photo_left[i].style.top = random(ranges.left.y) + 'px';
-        photo_left[i].style['transform'] = 'rotate(' + random([-150, 150]) + 'deg)';
+        photo_left[i].style['transform'] = 'rotate(' + random([-150, 150]) + 'deg) scale(0.95)';
     }
     for ( var i in photo_right ) {
         photo_right[i].style.left = random(ranges.right.x) + 'px';
         photo_right[i].style.top = random(ranges.right.y) + 'px';
-        photo_right[i].style['transform'] = 'rotate(' + random([-150, 150]) + 'deg)';
+        photo_right[i].style['transform'] = 'rotate(' + random([-150, 150]) + 'deg) scale(0.95)';
     }
+
+    /* 导航的处理 */
+    var navs = g('.i');
+    for ( var i=0; i<navs.length; i++ ) {
+        navs[i].className = navs[i].className.replace(/\s*i_current\s*/,' '); //去掉当前状态
+        navs[i].className = navs[i].className.replace(/\s*i_back\s*/,' '); //去掉背面向上状态
+    }
+    g('#nav_'+n).className += ' i_current ';// 将导航制定的设置为选中状态
 
 }
 
 // 3D翻转
 function turn(elm) {
     var cls = elm.className;
+    var n = elm.id.split('_')[1];
+
+    if ( !/photo-center/.test(cls) ) {
+        return rsort(n);
+    }
+
     if ( /photo-front/.test(cls) ) {
         cls = cls.replace(/photo-front/, 'photo-back');
+        g('#nav_'+n).className += ' i_back ';
     } else {
         cls = cls.replace(/photo-back/, 'photo-front');
+        g('#nav_'+n).className = g('#nav_'+n).className.replace(/\s*i_back\s*/,' ');
     }
-    return elm.className = cls;
+    elm.className = cls;
+    return false;
 }
 
 // 计算左右分区的坐标范围

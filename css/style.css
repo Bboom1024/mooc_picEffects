@@ -27,6 +27,7 @@ body {
     position: absolute;
     z-index: 1;
     box-shadow: 0 0 1px rgba(0, 0, 0, .01);
+    transition: all 0.5s;
 }
 /* 负责3D旋转 */
 .photo-warp {
@@ -35,7 +36,13 @@ body {
     position: absolute;
     left: 0;
     top: 0;
-    
+}
+.photo {  /* 为了解决div去掉photo-center后瞬间没有left,top等值而闪动现象 */
+          /* 同时实现一开始全部中间，然后在两边分布的动画效果 */
+    left: 50%;
+    top: 50%;
+    margin-top: -160px;
+    margin-left: -130px;
 }
 .photo-center {
     left: 50%;
@@ -85,19 +92,19 @@ body {
     -webkit-perspective: 800px;
             perspective: 800px;
 }
+
     .photo-warp {
-        -webkit-transform-style: preserve-3d;
-                transform-style: preserve-3d;
-        -webkit-transition: all .6s;
-                transition: all .6s;
+        transform-style: preserve-3d;
+        transition: all .6s;
+        transform-origin: 0% 50%;
     }
+
     .photo-front .photo-warp {
-        -webkit-transform: rotateY(0deg);
-                transform: rotateY(0deg);
+        transform: translate(0px, 0px) rotateY(0deg);
     }
     .photo-back .photo-warp {
-        -webkit-transform: rotateY(180deg);
-                transform: rotateY(180deg);
+        /*transform: rotateY(180deg);*/
+        transform: translate(260px, 0px) rotateY(180deg);
     }
     .photo-warp .sider {
         -webkit-backface-visibility: hidden;
@@ -112,3 +119,43 @@ body {
                 transform: rotateY(180deg);
     }
     
+/* 导航栏 */
+@font-face {
+    font-family: 'icons';
+    src: url('./iconfont.woff') format('woff');
+    font-weight: normal;
+}
+.nav {
+    width: 80%;
+    height: 30px;
+    position: absolute;
+    left: 10%;
+    bottom: 2%;
+    z-index: 999;
+    line-height: 30px;
+    text-align: center;  /* 使里面的居中 */
+}
+.nav .i {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: #aaa;
+    border-radius: 50%;
+    cursor: pointer;
+    transform: scale(.48);
+    transition: all 0.6s;
+}
+.nav .i:after {
+    content: '\e6ea';
+    font-family: 'icons';
+    opacity: 0;
+}
+.nav .i_current {
+    transform: scale(1);
+}
+.nav .i_current:after {
+    opacity: 1;
+}
+.nav .i_back {
+    transform: rotateY(180deg);
+}
